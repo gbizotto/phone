@@ -15,21 +15,36 @@ public class SMSReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Object[] pdus = (Object[])intent.getExtras().get("pdus");
-        String format = intent.getStringExtra(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
-        SmsMessage shortMessage;
 
-        Telephony.Sms.Intents.getMessagesFromIntent(intent);
+        //TODO read this from DB, shared preferences, whatever is better for the app.
+        String savedPhoneNumber = "";
+        //TODO read this from DB, shared preferences, whatever is better for the app.
+        String verificationCode = "";
+
         //TODO see:
         // http://droidcoders.blogspot.ca/2011/09/sms-receive.html
         // http://www.worldbestlearningcenter.com/tips/Android-receive-sms-programmatically.htm
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            shortMessage = SmsMessage.createFromPdu((byte[]) pdus[0], format);
-        } else {
-            shortMessage = SmsMessage.createFromPdu((byte[]) pdus[0]);
-        }
+        if (pdus.length > 0) {
+            SmsMessage[] messages;
 
-        Log.d("SMSReceiver","SMS message sender: " + shortMessage.getOriginatingAddress());
-        Log.d("SMSReceiver","SMS message text: "+ shortMessage.getDisplayMessageBody());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                messages = Telephony.Sms.Intents.getMessagesFromIntent(intent);
+            } else {
+                messages = new SmsMessage[pdus.length];
+                for (int i = 0; i < messages.length; i++) {
+                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                }
+            }
+
+            for (int i = 0; i < messages.length; i++) {
+                if (savedPhoneNumber.equals(messages[i].getOriginatingAddress())) {
+                    // If the message was sent locally, this can be enough.
+
+                } else if (messages[i].getMessageBody().contains(verificationCode)){
+                    // If code in on the body, it's done.
+                }
+            }
+        }
     }
 }
