@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PhoneNumber</string>
+    <string name="mobile_phone_number">Mobile phone number</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="sms_denied">As SMS permission was denied, it won\'t be possible to send an SMS.</string>
+    <string name="empty_phone_number">Please, fill your mobile phone number.</string>
 </resources>
