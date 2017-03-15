@@ -1,5 +1,7 @@
 # phone
 
+Study project to learn how to send SMS and listen to its arrival.
+
 ## Test:
 - Programmatically find out user's phone number. It's a bust, usually it won't work.
 
